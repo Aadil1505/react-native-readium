@@ -194,6 +194,14 @@ class HybridReadiumView: HybridReadiumViewSpec {
 
     readerViewController = vc
 
+    // Titles patch: iOS never raises `onSelectionChange` (the native side has
+    // no selection-change path), so the dead prop is reused to deliver page
+    // taps to JS with an empty event. The app summons its own chrome from it;
+    // nothing here touches the host navigation bar.
+    vc.onTap = { [weak self] in
+      self?.onSelectionChange?(SelectionEvent(locator: nil, selectedText: nil))
+    }
+
     // Apply pending state
     if preferences != nil { updatePreferences() }
     if decorations != nil { updateDecorations() }

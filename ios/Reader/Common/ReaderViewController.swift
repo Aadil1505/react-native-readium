@@ -102,11 +102,10 @@ class ReaderViewController: UIViewController, Loggable {
     configureNavigatorInteractions()
   }
 
-  override func willMove(toParent parent: UIViewController?) {
-    // Restore library's default UI colors
-    navigationController?.navigationBar.tintColor = .black
-    navigationController?.navigationBar.barTintColor = .white
-  }
+  // Titles patch: the wrapper is embedded in the app's own navigation stack,
+  // so it must never restyle or toggle the host UINavigationBar. Taps are
+  // forwarded to the JS side instead, which owns all reader chrome.
+  var onTap: (() -> Void)?
 
 
   // MARK: - Navigation bar
@@ -122,8 +121,7 @@ class ReaderViewController: UIViewController, Loggable {
   }
 
   func updateNavigationBar(animated: Bool = true) {
-    let hidden = navigationBarHidden && !UIAccessibility.isVoiceOverRunning
-    navigationController?.setNavigationBarHidden(hidden, animated: animated)
+    // Titles patch: the host navigation bar is left alone.
     setNeedsStatusBarAppearanceUpdate()
   }
 
@@ -206,7 +204,9 @@ class ReaderViewController: UIViewController, Loggable {
         return false
       }
 
-      self.toggleNavigationBar()
+      // Titles patch: a tap on the page is reported to JS instead of
+      // toggling the host navigation bar.
+      self.onTap?()
       return true
     })
     toggleToken.store(in: &navigatorInputObserverTokens)

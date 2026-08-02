@@ -122,11 +122,8 @@ class EPUBViewController: ReaderViewController, SelectionActionHandlerDelegate {
 
       navigator.view.backgroundColor = colors.mainColor
       view.backgroundColor = colors.mainColor
-      //
-      navigationController?.navigationBar.barTintColor = colors.mainColor
-      navigationController?.navigationBar.tintColor = colors.textColor
-
-      navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: colors.textColor]
+      // Titles patch: the host navigation bar is the app's, not the
+      // reader's; its colors are never touched from here.
     }
 
 }
