@@ -9,4 +9,5 @@ export type ReadiumViewRef = BaseReadiumViewRef & {
     /** @deprecated Use goBackward() */
     prevPage: () => void;
 };
-export declare const ReadiumView: any;
+import React from 'react';
+export declare const ReadiumView: React.ForwardRefExoticComponent<ReadiumProps & React.RefAttributes<ReadiumViewRef>>;
